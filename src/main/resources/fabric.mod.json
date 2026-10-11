@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "shinydex",
+  "version": "${version}",
+  "name": "Shiny Dex",
+  "description": "A shiny black Pokédex for Cobblemon that keeps track of every shiny Pokémon you catch.",
+  "authors": ["larpconu"],
+  "license": "MIT",
+  "icon": "assets/shinydex/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.shinydex.ShinyDex"],
+    "client": ["com.shinydex.client.ShinyDexClient"]
+  },
+  "mixins": [
+    {"config": "shinydex.mixins.json", "environment": "client"}
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "cobblemon": ">=1.6.0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "item.shinydex.shiny_dex": "Shiny Dex",
+  "item.shinydex.shiny_dex.tooltip": "Keeps track of every shiny Pokémon you catch.",
+  "key.categories.shinydex": "Shiny Dex",
+  "key.shinydex.open": "Open Shiny Dex",
+  "shinydex.ui.title": "✦ SHINY DEX ✦",
+  "shinydex.message.registered": "✦ Shiny %s registered in your Shiny Dex! ✦",
+  "shinydex.message.registered_again": "✦ Another shiny %s added to your Shiny Dex (%s caught). ✦",
+  "shinydex.message.no_data": "The Shiny Dex needs to be installed on the server too."
+}

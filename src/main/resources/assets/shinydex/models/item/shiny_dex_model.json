@@ -1,0 +1,6 @@
+{
+  "parent": "cobblemon:item/pokedex_red_model",
+  "textures": {
+    "all": "shinydex:item/shiny_dex_model"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "pokedex",
+  "pattern": [
+    "GAD",
+    "GSG",
+    "GAD"
+  ],
+  "key": {
+    "S": {
+      "tag": "cobblemon:pokedex_screen"
+    },
+    "D": {
+      "tag": "c:gems/diamond"
+    },
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "A": {
+      "item": "cobblemon:black_apricorn"
+    }
+  },
+  "result": {
+    "id": "shinydex:shiny_dex"
+  }
+}

@@ -1,0 +1,91 @@
+import groovy.json.JsonSlurper
+import java.util.zip.ZipFile
+
+plugins {
+    id 'fabric-loom' version "${loom_version}"
+    id 'maven-publish'
+}
+
+version = "${project.mod_version}+${project.minecraft_version}"
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+}
+
+// ---------------------------------------------------------------------------
+// Cobblemon is fetched from Modrinth (the official distribution) and used as a
+// compile-only dependency. Its bundled libraries (molang etc.) are extracted so
+// the Java compiler can resolve every type Cobblemon's public API mentions.
+// ---------------------------------------------------------------------------
+def cobblemonVersion = project.cobblemon_version
+def libsDir = file("libs")
+def cobblemonJar = new File(libsDir, "cobblemon-fabric-${cobblemonVersion}.jar")
+def nestedDir = new File(libsDir, "cobblemon-nested-${cobblemonVersion}")
+
+if (!cobblemonJar.exists()) {
+    libsDir.mkdirs()
+    def api = new URL("https://api.modrinth.com/v2/project/cobblemon/version?loaders=%5B%22fabric%22%5D&game_versions=%5B%221.21.1%22%5D")
+    def conn = api.openConnection()
+    conn.setRequestProperty("User-Agent", "shinydex-build (github.com/larpconu/shineydex)")
+    def versions = new JsonSlurper().parse(conn.inputStream)
+    def match = versions.find { it.version_number == cobblemonVersion }
+    if (match == null) {
+        throw new GradleException("Cobblemon ${cobblemonVersion} not found on Modrinth. Available: ${versions*.version_number}")
+    }
+    def file = match.files.find { it.primary } ?: match.files[0]
+    logger.lifecycle("Downloading Cobblemon ${cobblemonVersion} from ${file.url}")
+    def dl = new URL(file.url).openConnection()
+    dl.setRequestProperty("User-Agent", "shinydex-build (github.com/larpconu/shineydex)")
+    cobblemonJar.withOutputStream { out -> out << dl.inputStream }
+}
+
+if (!nestedDir.exists()) {
+    nestedDir.mkdirs()
+    new ZipFile(cobblemonJar).withCloseable { zip ->
+        zip.entries().findAll { !it.directory && it.name.startsWith("META-INF/jars/") && it.name.endsWith(".jar") }.each { entry ->
+            new File(nestedDir, entry.name.substring("META-INF/jars/".length())).withOutputStream { out ->
+                out << zip.getInputStream(entry)
+            }
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    modCompileOnly files(cobblemonJar)
+    compileOnly fileTree(dir: nestedDir, include: "*.jar")
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+    it.options.encoding = "UTF-8"
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
