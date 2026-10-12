@@ -33,7 +33,7 @@ if (!cobblemonJar.exists()) {
     def conn = api.openConnection()
     conn.setRequestProperty("User-Agent", "shinydex-build (github.com/larpconu/shineydex)")
     def versions = new JsonSlurper().parse(conn.inputStream)
-    def match = versions.find { it.version_number == cobblemonVersion }
+    def match = versions.find { it.version_number == cobblemonVersion || it.version_number == "${cobblemonVersion}+1.21.1" }
     if (match == null) {
         throw new GradleException("Cobblemon ${cobblemonVersion} not found on Modrinth. Available: ${versions*.version_number}")
     }
