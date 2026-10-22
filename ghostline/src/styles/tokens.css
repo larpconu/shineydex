@@ -1,0 +1,45 @@
+/* GHOSTLINE design tokens (section 16 of the spec). */
+:root {
+  --bg: #0B1018;
+  --surface: #141B27;
+  --surface-2: #1C2535;
+  --border: #2A3447;
+  --text: #F2F4F8;
+  --text-dim: #8C97AB;
+  --runner: #C6FF3D;
+  --hunter: #FF3D8B;
+  --zone: #38E1FF;
+  --warning: #FFB020;
+  --danger: #FF4D4D;
+
+  --runner-glow: 0 0 24px rgba(198, 255, 61, .35);
+  --hunter-glow: 0 0 24px rgba(255, 61, 139, .35);
+  --zone-glow: 0 0 24px rgba(56, 225, 255, .35);
+
+  /* Role theming: the accent follows your team. Lime until you're a hunter. */
+  --accent: var(--runner);
+  --accent-ink: #0B1018;
+  --accent-glow: var(--runner-glow);
+  --accent-soft: rgba(198, 255, 61, .12);
+
+  --font-head: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --fs-72: 72px; --fs-40: 40px; --fs-28: 28px; --fs-20: 20px; --fs-17: 17px; --fs-15: 15px; --fs-13: 13px;
+
+  --space: 8px;
+  --gutter: 20px;
+  --radius: 16px;
+  --pill: 999px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --spring: cubic-bezier(.34, 1.56, .64, 1);
+  color-scheme: dark;
+}
+
+body[data-role='hunter'] {
+  --accent: var(--hunter);
+  --accent-glow: var(--hunter-glow);
+  --accent-soft: rgba(255, 61, 139, .14);
+}
